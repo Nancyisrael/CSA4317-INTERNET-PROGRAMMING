@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details - BlossomGifts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { font-family: Arial, sans-serif; background-image: url('orders.jpg'); background-size: cover; background-position: center; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #8B4513; }
+        .order-details { margin-bottom: 20px; }
+        .order-details h2 { font-size: 1.5em; color: #8B4513; margin-bottom: 10px; }
+        .order-item { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; padding: 15px 0; }
+        .order-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; }
+        .order-item-details { flex-grow: 1; padding-left: 20px; }
+        .item-name { font-size: 1.2em; color: #333; }
+        .item-price { font-size: 1em; color: #8B4513; }
+        .total-cost { margin: 20px 0; font-size: 1.3em; text-align: right; }
+        .shipping-details { background-color: #f9f9f9; padding: 15px; border-radius: 5px; }
+        .shipping-details p { margin-bottom: 8px; color: #555; }
+        .shipping-details p strong { color: #333; }
+        .back-btn { display: inline-block; padding: 10px 20px; background-color: #ff1493; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; text-align: center; cursor: pointer; font-size: 1em; }
+        .back-btn:hover { background-color: #ff69b4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Confirmation</h1>
+        
+        <div class="order-details">
+            <h2>Your Order</h2>
+            <div id="orderItems"></div>
+            <p class="total-cost">Total Paid: ₹<span id="totalAmount">0.00</span></p>
+        </div>
+
+        <div class="shipping-details">
+            <h2>Shipping Information</h2>
+            <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+            <p><strong>Shipping Address:</strong> <span id="shippingAddress"></span></p>
+            <p><strong>Shipping Date:</strong> <span id="shippingDate"></span></p>
+            <p><strong>Expected Delivery Date:</strong> <span id="deliveryDate"></span></p>
+        </div>
+
+        <a href="home.html" class="back-btn">Back to Home</a>
+    </div>
+
+    <script>
+        function loadOrderDetails() {
+            // Retrieve order items and total amount from localStorage
+            const paidItems = JSON.parse(localStorage.getItem('paidItems')) || [];
+            const totalPaidAmount = localStorage.getItem('totalAmountPaid') || '0.00';
+
+            // Retrieve user details
+            const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
+            const fullName = userDetails.fullName || 'Your full name';
+            const shippingAddress = userDetails.shippingAddress || 'Your shipping address';
+
+            const orderItemsContainer = document.getElementById('orderItems');
+            orderItemsContainer.innerHTML = ''; // Clear existing items
+
+            // Set total amount paid
+            document.getElementById('totalAmount').innerText = parseFloat(totalPaidAmount).toFixed(2);
+
+            // Display the paid items
+            paidItems.forEach(item => {
+                const itemTotal = (item.price * item.quantity).toFixed(2);
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('order-item');
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="order-item-details">
+                        <p class="item-name">${item.name}</p>
+                        <p class="item-price">Price: ₹${item.price.toFixed(2)} | Quantity: ${item.quantity}</p>
+                        <p>Total: ₹${itemTotal}</p>
+                    </div>
+                `;
+                orderItemsContainer.appendChild(itemDiv);
+            });
+
+            // Set full name and shipping address
+            document.getElementById('fullName').innerText = fullName;
+            document.getElementById('shippingAddress').innerText = shippingAddress;
+
+            // Set shipping date and expected delivery date
+            const shippingDate = new Date();
+            const deliveryDate = new Date();
+            deliveryDate.setDate(shippingDate.getDate() + 5); // Expected delivery in 5 days
+
+            document.getElementById('shippingDate').innerText = shippingDate.toDateString();
+            document.getElementById('deliveryDate').innerText = deliveryDate.toDateString();
+        }
+
+        // Initialize order details on page load
+        window.onload = loadOrderDetails;
+    </script>
+</body>
+</html>

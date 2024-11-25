@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlossomGifts - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 60px; /* Space for header */
+        }
+
+        .header {
+            background-color: #af4c7c;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: #050f06;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #080a08;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 40px; /* Increased padding for larger fieldset */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Larger shadow */
+            width: 500px; /* Enlarge the fieldset */
+        }
+
+        fieldset {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        legend {
+            font-size: 2.5em; /* Enlarge "Welcome to BlossomGifts!" text */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .heart-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #87CEEB; /* Sky blue for round button */
+            color: #000; /* Black text inside */
+            border: none;
+            padding: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25em;
+            text-decoration: none;
+            position: relative;
+            width: 120px; /* Width for heart shape */
+            height: 120px; /* Height for heart shape */
+            text-align: center;
+        }
+
+        .heart-button:before,
+        .heart-button:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 60px;
+            height: 100px;
+            border-radius: 50px 50px 0 0;
+            background: #FF69B4; /* Pink heart shape */
+        }
+
+        .heart-button:before {
+            left: 60px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart-button:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .heart-button:hover {
+            background-color: #72B3DB; /* Slightly darker sky blue on hover */
+        }
+
+        .heart-text {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px; /* Gap for space between buttons */
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Radha's Gifted blooms</h1>
+        <button class="back-button" onclick="location.href='index.html'">Back</button>
+    </div>
+
+    <div class="container">
+        <fieldset>
+            <legend>Welcome to BlossomGifts!</legend>
+            <div class="button-group">
+                <button class="heart-button" onclick="location.href='items.html'">
+                    <span class="heart-text">View Items</span>
+                </button>
+                <button class="heart-button" onclick="location.href='cart.html'">
+                    <span class="heart-text">View Cart</span>
+                </button>
+            </div>
+            <div class="button-group">
+                <button class="heart-button" onclick="location.href='wishlist.html'">
+                    <span class="heart-text">View Wishlist</span>
+                </button>
+                <button class="heart-button" onclick="location.href='orders.html'">
+                    <span class="heart-text">View Orders</span>
+                </button>
+            </div>
+        </fieldset>
+    </div>
+</body>
+</html>

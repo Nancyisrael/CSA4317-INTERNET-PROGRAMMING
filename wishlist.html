@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - BlossomGifts</title>
+    <style>
+        /* Existing styles unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-image: url('wishlist gackground.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #8B4513; /* Brown */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .wishlist-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .wishlist-item .details {
+            flex-grow: 1;
+        }
+
+        .wishlist-item .name {
+            font-size: 1.2em;
+            color: #8B4513; /* Brown */
+        }
+
+        .wishlist-item .price {
+            font-size: 1.1em;
+            color: #8B4513; /* Brown */
+        }
+
+        .wishlist-item .remove-btn, .wishlist-item .cart-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .wishlist-item .remove-btn {
+            background-color: #ff4d4d; /* Red */
+            color: white;
+        }
+
+        .wishlist-item .cart-btn {
+            background-color: #8B4513; /* Brown */
+            color: white;
+            margin-left: 10px;
+        }
+
+        .wishlist-item .remove-btn:hover, .wishlist-item .cart-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Back button styles */
+        .back-btn {
+            background-color: #8B4513; /* Brown */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Wishlist</h1>
+    </div>
+
+    <!-- Back Button -->
+    <div class="container">
+        <a href="home.html" class="back-btn">Back to Home</a>
+
+        <div id="wishlistContainer">
+            <!-- Wishlist items will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        let wishlistItems = [];
+
+        // Load wishlist from localStorage
+        function loadWishlist() {
+            const savedWishlist = localStorage.getItem('wishlist');
+            wishlistItems = savedWishlist ? JSON.parse(savedWishlist) : [];
+            updateWishlist();
+        }
+
+        function updateWishlist() {
+            const wishlistContainer = document.getElementById('wishlistContainer');
+            wishlistContainer.innerHTML = ''; // Clear existing items
+            
+            wishlistItems.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('wishlist-item');
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="details">
+                        <p class="name">${item.name}</p>
+                        <p class="price">₹${item.price.toFixed(2)}</p>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromWishlist(${index})">Remove</button>
+                    <button class="cart-btn" onclick="addToCart(${index})">Add to Cart</button>
+                `;
+                wishlistContainer.appendChild(itemDiv);
+            });
+        }
+
+        function removeFromWishlist(index) {
+            // Remove item from the wishlist
+            wishlistItems.splice(index, 1);
+            localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
+            updateWishlist();
+        }
+
+        function addToCart(index) {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = wishlistItems[index];
+            
+            // Add the item to cart with quantity initialized to 1
+            cartItems.push({ ...item, quantity: 1 });
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+
+            // Redirect to cart page
+            window.location.href = 'cart.html';
+        }
+
+        // Initialize wishlist on page load
+        loadWishlist();
+    </script>
+</body>
+</html>

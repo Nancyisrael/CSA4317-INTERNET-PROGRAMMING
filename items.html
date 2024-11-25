@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlossomGifts - Items</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url('background-1.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 60px; /* Space for header */
+        }
+
+        .header {
+            background-color: #8B4513; /* Brown */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            position: fixed; /* Fixed at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+        }
+
+        .header .nav-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: white;
+            color: #8B4513; /* Brown */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            border: 2px solid #8B4513; /* Border to match the theme */
+        }
+
+        .header .nav-btn:hover {
+            opacity: 0.9;
+            background-color: #f2f2f2; /* Lighter gray on hover */
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8); /* To make content readable over background */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added slight shadow */
+            width: 80%; /* Adjusted to fit content */
+            max-width: 1000px; /* Limit the maximum width */
+            margin-top: 80px; /* Margin to avoid overlapping with fixed header */
+        }
+
+        .category {
+            background-color: #8B4513; /* Brown */
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px;
+            text-align: center;
+            width: 150px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            display: inline-block;
+        }
+
+        .category:hover {
+            opacity: 0.9;
+        }
+
+        /* Add styles for fieldsets (if needed) */
+        fieldset {
+            background-color: #87ceeb; /* Sky blue */
+            border: 2px solid #4682b4; /* Steel blue border */
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="home.html" class="nav-btn">Home</a>
+        <h1>Items list</h1>
+    </div>
+
+    <div class="container">
+        <a href="bouquets.html" class="category">Bouquets</a>
+        <a href="choclates.html" class="category">Chocolates</a>
+        <a href="perfumes.html" class="category">Perfumes</a>
+        <a href="necklaces.html" class="category">Necklaces</a>
+        <a href="photo-frames.html" class="category">Photo Frames</a>
+        <a href="rings.html" class="category">Rings</a>
+        <a href="shirts.html" class="category">Shirts</a>
+        <a href="shoes-men.html" class="category">Shoes for Men</a>
+        <a href="shoes-women.html" class="category">Shoes for Women</a>
+        <a href="teedy-bear.html" class="category">Teddy bears</a>
+        <a href="mobile-phones.html" class="category">Mobile Phones</a>
+        <a href="watches.html" class="category">Watches</a>
+        <a href="hand-bags.html" class="category">Hand Bags</a>
+    </div>
+</body>
+</html>
