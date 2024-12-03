@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - BlossomGifts</title>
+    <style>
+        /* Basic styles */
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('payment background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #8B4513; /* Brown */
+        }
+       
+        .order-summary {
+            margin-bottom: 20px;
+        }
+
+        .order-summary h2 {
+            margin-bottom: 10px;
+            color: #8B4513;
+        }
+
+        .order-summary .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-summary .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+        }
+
+        .cart-item .details {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+
+        .payment-form input, .payment-form select, .payment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .payment-form button, .back-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            background-color: #ff1493; /* Different color for back button */
+        }
+
+        .back-btn:hover {
+            background-color: #ff69b4; /* Hover effect for back button */
+        }
+
+        #cardInputs, #upiProviderOptions, #qrCode {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Complete Your Payment</h1>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div id="orderItems"></div>
+            <p><strong>Total:</strong> ₹<span id="totalAmount">0.00</span></p>
+        </div>
+
+        <!-- Payment Form -->
+        <form class="payment-form" id="paymentForm">
+            <input type="text" id="name" name="name" placeholder="Full Name (8-10 characters)" minlength="8" maxlength="10" required>
+            <input type="email" id="email" name="email" placeholder="Email Address" required>
+            <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number" required>
+            <textarea id="address" name="address" placeholder="Shipping Address" rows="4" required></textarea>
+
+            <select id="paymentMethod" name="paymentMethod" required>
+                <option value="" disabled selected>Select Payment Method</option>
+                <option value="creditCard">Credit Card</option>
+                <option value="upi">UPI</option>
+                <option value="cashOnDelivery">Cash on Delivery</option>
+            </select>
+
+            <!-- Credit Card Fields -->
+            <div id="cardInputs">
+                <input type="text" id="cardNumber" placeholder="Credit Card Number" maxlength="16">
+                <input type="text" id="cardExpiry" placeholder="Expiry Date (MM/YY)">
+                <input type="text" id="cardCVV" placeholder="CVV" maxlength="3">
+            </div>
+
+            <!-- UPI Provider Selection -->
+            <div id="upiProviderOptions">
+                <select id="upiProvider">
+                    <option value="" disabled selected>Select UPI Provider</option>
+                    <option value="phonepe">PhonePe</option>
+                    <option value="googlePay">Google Pay</option>
+                    <option value="scanner">Scanner</option>
+                </select>
+                <input type="text" id="upiId" placeholder="Enter UPI ID" style="display: none;">
+                <div id="qrCode">QR Code will appear here.</div>
+            </div>
+
+            <button type="submit">Complete Payment</button>
+            <button type="button" class="back-btn" onclick="goBack()">Back to Cart</button>
+        </form>
+    </div>
+
+    <script>
+        // Load saved user details from localStorage
+        function loadUserDetails() {
+            const savedDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if (savedDetails) {
+                document.getElementById('name').value = savedDetails.name || '';
+                document.getElementById('email').value = savedDetails.email || '';
+                document.getElementById('mobile').value = savedDetails.mobile || '';
+                document.getElementById('address').value = savedDetails.address || '';
+            }
+        }
+
+        // Save user details to localStorage
+        function saveUserDetails() {
+            const userDetails = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                address: document.getElementById('address').value
+            };
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+        }
+
+        // Load order summary from localStorage
+        function loadOrderSummary() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalAmount = localStorage.getItem('totalAmount') || '0.00';
+
+            const orderItemsContainer = document.getElementById('orderItems');
+            orderItemsContainer.innerHTML = ''; // Clear any existing content
+
+            cartItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                const itemTotal = (item.price * item.quantity).toFixed(2);
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="details">
+                        <p class="name">${item.name}</p>
+                        <p class="price">₹${item.price.toFixed(2)}</p>
+                        <p class="quantity">Quantity: ${item.quantity}</p>
+                        <p class="total">Total: ₹${itemTotal}</p>
+                    </div>
+                `;
+                orderItemsContainer.appendChild(itemDiv);
+            });
+
+            document.getElementById('totalAmount').innerText = totalAmount;
+        }
+
+        // Handle payment method change
+        function handlePaymentMethodChange(event) {
+            const paymentMethod = event.target.value;
+            const cardInputs = document.getElementById('cardInputs');
+            const upiProviderOptions = document.getElementById('upiProviderOptions');
+
+            // Hide all options initially
+            cardInputs.style.display = 'none';
+            upiProviderOptions.style.display = 'none';
+
+            if (paymentMethod === 'creditCard') {
+                cardInputs.style.display = 'block';
+            } else if (paymentMethod === 'upi') {
+                upiProviderOptions.style.display = 'block';
+            }
+        }
+
+        // Handle UPI provider change
+        function handleUpiProviderChange(event) {
+            const upiProvider = event.target.value;
+            const upiIdInput = document.getElementById('upiId');
+            const qrCode = document.getElementById('qrCode');
+
+            // Reset display for UPI fields
+            upiIdInput.style.display = 'none';
+            qrCode.style.display = 'none';
+
+            if (upiProvider === 'phonepe' || upiProvider === 'googlePay') {
+                upiIdInput.style.display = 'block';
+            } else if (upiProvider === 'scanner') {
+                // Redirect to qr-code.html when "Scanner" is selected
+                window.location.href = 'qr-code.html'; // Redirect to the QR code page
+            }
+        }
+
+        // Go back to cart page
+        function goBack() {
+            window.location.href = 'cart.html';
+        }
+
+        // Event Listeners
+        document.getElementById('paymentMethod').addEventListener('change', handlePaymentMethodChange);
+        document.getElementById('upiProvider').addEventListener('change', handleUpiProviderChange);
+
+        // On form submission, save user details and redirect
+        document.getElementById('paymentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+ // Prevent the default form submission
+
+            const userDetails = {
+        fullName: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        mobile: document.getElementById('mobile').value,
+        shippingAddress: document.getElementById('address').value,
+    };
+    localStorage.setItem('userDetails', JSON.stringify(userDetails));
+
+    // Save cart details (items and total cost) to localStorage
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalAmount = localStorage.getItem('totalAmount') || '0.00';
+    localStorage.setItem('paidItems', JSON.stringify(cartItems));
+    localStorage.setItem('totalAmountPaid', totalAmount);
+
+    alert('Payment completed successfully! Redirecting to orders page...');
+    window.location.href = 'orders.html'; // Redirect to orders page
+        });
+
+        // Initialize form with saved details and order summary
+        loadUserDetails();
+        loadOrderSummary();
+    </script>
+
+</body>
+</html>
